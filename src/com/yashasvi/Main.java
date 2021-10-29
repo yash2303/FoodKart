@@ -5,17 +5,17 @@ import java.util.Map;
 
 import com.yashasvi.controller.OrderingService;
 import com.yashasvi.controller.RestaurantService;
-import com.yashasvi.dao.InMemoryDAO;
+import com.yashasvi.dao.DAO;
 import com.yashasvi.strategies.LowestOrderAmountStrategy;
 import com.yashasvi.strategies.RestaurantSelectionStrategy;
 
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
-        InMemoryDAO inMemoryDao = new InMemoryDAO();
+        DAO dao = new DAO();
         RestaurantSelectionStrategy restaurantSelectionStrategy = new LowestOrderAmountStrategy();
-        OrderingService orderingService = new OrderingService(inMemoryDao, restaurantSelectionStrategy);
-        RestaurantService restaurantService = new RestaurantService(inMemoryDao);
+        OrderingService orderingService = new OrderingService(dao, restaurantSelectionStrategy);
+        RestaurantService restaurantService = new RestaurantService(dao);
 
         restaurantService.addRestaurant("resta1",
             new HashMap<>(Map.of("king_burger", 10.0, "samosa_pizza", 20.0, "alu_pasta", 19.0)),

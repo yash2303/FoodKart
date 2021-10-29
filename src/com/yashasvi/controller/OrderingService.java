@@ -8,7 +8,7 @@ import java.util.Set;
 
 import lombok.AllArgsConstructor;
 
-import com.yashasvi.dao.InMemoryDAO;
+import com.yashasvi.dao.DAO;
 import com.yashasvi.exceptions.NoAvailableRestaurantsException;
 import com.yashasvi.model.Order;
 import com.yashasvi.model.OrderDetails;
@@ -18,11 +18,11 @@ import com.yashasvi.util.CostCalculator;
 
 @AllArgsConstructor
 public class OrderingService {
-    private InMemoryDAO inMemoryDao;
+    private DAO dao;
     private RestaurantSelectionStrategy restaurantSelectionStrategy;
 
     public OrderDetails book(String customerId, Map<String, Integer> orderItems) {
-        Map<String, Restaurant> restaurants = inMemoryDao.getRestaurantMap();
+        Map<String, Restaurant> restaurants = dao.getRestaurantMap();
         List<Restaurant> filteredRestaurants = filterRestaurants(restaurants, orderItems);
         Optional<Restaurant> restaurant = restaurantSelectionStrategy.selectRestaurant(filteredRestaurants, orderItems);
         if (restaurant.isEmpty()) {
@@ -30,16 +30,16 @@ public class OrderingService {
         }
         Double cost = CostCalculator.getCost(restaurant.get(), orderItems);
         Order order = new Order(restaurant.get().getRestaurantId(), customerId, orderItems, cost);
-        inMemoryDao.placeOrder(order, restaurant.get());
+        dao.placeOrder(order, restaurant.get());
         return new OrderDetails(restaurant.get().getRestaurantId(), order.getOrderId());
     }
 
     public void markAsDelivered(String orderId) {
-        inMemoryDao.markAsDelivered(orderId);
+        dao.markAsDelivered(orderId);
     }
 
     public void printAllOrders() {
-        Map<String, Order> orderMap = inMemoryDao.getOrderMap();
+        Map<String, Order> orderMap = dao.getOrderMap();
         System.out.println(orderMap.values());
     }
 

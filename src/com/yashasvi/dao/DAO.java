@@ -12,11 +12,11 @@ import com.yashasvi.model.OrderStatus;
 import com.yashasvi.model.Restaurant;
 
 @Getter
-public class InMemoryDAO implements DAOInterface {
+public class DAO {
     private final Map<String, Restaurant> restaurantMap;
     private final Map<String, Order> orderMap;
 
-    public InMemoryDAO() {
+    public DAO() {
         this.restaurantMap = new HashMap<>();
         this.orderMap = new HashMap<>();
     }
